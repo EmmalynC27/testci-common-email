@@ -9,6 +9,7 @@ import javax.mail.Session;
 import javax.mail.MessagingException;
 import java.util.Date;
 import java.util.Properties;
+import java.util.Map;
 
 public class EmailTest {
     private static final String[] TEST_EMAILS = { "abc@example.com", "def@example.com", "ghi@example.com" };
@@ -17,6 +18,7 @@ public class EmailTest {
     @Before
     public void setUpEmailTest() throws Exception {
         email = new EmailConcrete();
+        email.setHostName("localhost"); // Set default hostname for all tests
     }
 
     @After
@@ -45,8 +47,14 @@ public class EmailTest {
 
     @Test
     public void testAddHeader() {
-        email.addHeader("X-Custom-Header", "CustomValue");
-        assertNotNull(email.getHeaders());
+        String headerName = "X-Custom-Header";
+        String headerValue = "CustomValue";
+        
+        email.addHeader(headerName, headerValue);
+        Map<String, String> headers = email.getHeaders();
+        
+        assertNotNull("Headers map should not be null", headers);
+        assertEquals("Header value should match", headerValue, headers.get(headerName));
     }
 
     @Test
@@ -67,9 +75,10 @@ public class EmailTest {
         email.addTo("to@example.com");
         email.setSubject("Test Subject");
         email.setMsg("Test Message");
+        email.setHostName("localhost"); // Explicitly set hostname
 
         email.buildMimeMessage();
-        assertNotNull(email.getMimeMessage());
+        assertNotNull("MimeMessage should not be null", email.getMimeMessage());
     }
 
     @Test(expected = EmailException.class)
@@ -80,8 +89,9 @@ public class EmailTest {
 
     @Test
     public void testGetHostName() {
-        email.setHostName("smtp.example.com");
-        assertEquals("smtp.example.com", email.getHostName());
+        String testHost = "smtp.example.com";
+        email.setHostName(testHost);
+        assertEquals(testHost, email.getHostName());
     }
 
     @Test
@@ -102,6 +112,7 @@ public class EmailTest {
     @Test
     public void testGetMailSessionWithSSL() throws Exception {
         email.setSSLOnConnect(true);
+        email.setHostName("localhost"); // Ensure hostname is set
         Session session = email.getMailSession();
         assertEquals("true", session.getProperties().getProperty("mail.smtp.ssl.enable"));
     }
