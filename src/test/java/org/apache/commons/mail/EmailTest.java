@@ -24,12 +24,12 @@ public class EmailTest {
     public void tearDownEmailTest() throws Exception {
         email = null;
     }
-    
-	public void testAddBcc() throws Exception {
-		email.addBcc(TEST_EMAILS);
-		
-		assertEquals(3, email.getBccAddresses().size());
-	}
+
+    public void testAddBcc() throws Exception {
+        email.addBcc(TEST_EMAILS);
+
+        assertEquals(3, email.getBccAddresses().size());
+    }
 
     @Test
     public void testAddCc() throws Exception {
@@ -71,9 +71,7 @@ public class EmailTest {
         try {
             email.buildMimeMessage();
             assertNotNull(email.getMimeMessage());
-        } catch (MessagingException e) {
-            fail("buildMimeMessage() threw an exception: " + e.getMessage());
-        }
+        
     }
 
     @Test(expected = EmailException.class)
@@ -141,4 +139,5 @@ public class EmailTest {
         email.setFrom("invalid-email-format");
     }
 }
+
 
