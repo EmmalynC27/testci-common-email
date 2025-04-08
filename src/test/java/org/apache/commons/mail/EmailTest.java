@@ -1,4 +1,3 @@
-
 package org.apache.commons.mail;
 
 import static org.junit.Assert.*;
@@ -25,9 +24,9 @@ public class EmailTest {
         email = null;
     }
 
+    @Test
     public void testAddBcc() throws Exception {
         email.addBcc(TEST_EMAILS);
-
         assertEquals(3, email.getBccAddresses().size());
     }
 
@@ -47,6 +46,7 @@ public class EmailTest {
     @Test
     public void testAddHeader() {
         email.addHeader("X-Custom-Header", "CustomValue");
+        assertNotNull(email.getHeaders());
     }
 
     @Test
@@ -68,10 +68,8 @@ public class EmailTest {
         email.setSubject("Test Subject");
         email.setMsg("Test Message");
 
-        try {
-            email.buildMimeMessage();
-            assertNotNull(email.getMimeMessage());
-        
+        email.buildMimeMessage();
+        assertNotNull(email.getMimeMessage());
     }
 
     @Test(expected = EmailException.class)
@@ -139,5 +137,3 @@ public class EmailTest {
         email.setFrom("invalid-email-format");
     }
 }
-
-
